@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Entity,
   Column,
@@ -28,4 +29,8 @@ export class User extends BaseEntity {
 
   @CreateDateColumn({ type: 'datetime' })
   created_at!: Date;
+
+  @Column({ nullable: true })
+  @Exclude()
+  currentHashedRefreshToken?: string;
 }

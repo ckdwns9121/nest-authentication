@@ -4,6 +4,7 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -30,10 +31,23 @@ export class AuthService {
     }
   }
 
-  async login(user: any) {
+  async createAccessToken(user: any) {
     const payload = { id: user.id, sub: user.user_id };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.secret,
+        expiresIn: '15m',
+      }),
+    };
+  }
+
+  async createRefreshToken(user: any) {
+    const payload = { id: user.id, sub: user.user_id };
+    return {
+      refresh_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.refresh_secret,
+        expiresIn: '1h',
+      }),
     };
   }
 }

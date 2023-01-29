@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Public } from './public.decorator';
+import { Public } from './auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +19,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.createAccessToken(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
