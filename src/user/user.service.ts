@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,17 +15,20 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async getById(id): Promise<User> {
+  async getById(id: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
     return user;
   }
 
-  async setCurrentRefreshToken(refreshToken: string, id: number) {
+  async setCurrentRefreshToken(refreshToken: string, id: string) {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.userRepository.update(id, { currentHashedRefreshToken });
+    const user = await this.getById(id);
+    user.currentHashedRefreshToken = currentHashedRefreshToken;
+    await this.userRepository.save(user);
+    // await this.userRepository.update(id, { currentHashedRefreshToken });
   }
 
-  async getUserIfRefreshTokenMatches(refreshToken: string, id: number) {
+  async getUserIfRefreshTokenMatches(refreshToken: string, id: string) {
     const user = await this.getById(id);
 
     const isRefreshTokenMatching = await bcrypt.compare(
@@ -34,10 +41,13 @@ export class UserService {
     }
   }
 
-  async removeRefreshToken(id: number) {
-    return this.userRepository.update(id, {
-      currentHashedRefreshToken: null,
-    });
+  async removeRefreshToken(id: string) {
+    const user = await this.getById(id);
+    user.currentHashedRefreshToken = null;
+    return await this.userRepository.save(user);
+    // return this.userRepository.update(id, {
+    //   currentHashedRefreshToken: null,
+    // });
   }
 
   async signup(createUserDto: CreateUserDto): Promise<User> {

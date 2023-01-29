@@ -31,23 +31,21 @@ export class AuthService {
     }
   }
 
-  async createAccessToken(user: any) {
-    const payload = { id: user.id, sub: user.user_id };
-    return {
-      access_token: this.jwtService.sign(payload, {
-        secret: jwtConstants.secret,
-        expiresIn: '15m',
-      }),
-    };
+  login(jwtPayload: any) {
+    const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
+    const access_token = this.jwtService.sign(payload, {
+      secret: jwtConstants.secret,
+      expiresIn: '10s',
+    });
+    return access_token;
   }
 
-  async createRefreshToken(user: any) {
-    const payload = { id: user.id, sub: user.user_id };
-    return {
-      refresh_token: this.jwtService.sign(payload, {
-        secret: jwtConstants.refresh_secret,
-        expiresIn: '1h',
-      }),
-    };
+  refreshToken(jwtPayload: any) {
+    const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
+    const refresh_token = this.jwtService.sign(payload, {
+      secret: jwtConstants.refresh_secret,
+      expiresIn: '1h',
+    });
+    return refresh_token;
   }
 }
