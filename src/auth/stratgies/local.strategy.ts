@@ -12,10 +12,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(id: string, password: string): Promise<any> {
+    // 비밀번호를 뺀 유저정보를 리턴받음
     const user = await this.authService.validateUser(id, password);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
     return user;
   }
 }
