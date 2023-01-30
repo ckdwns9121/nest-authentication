@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './auth.decorator';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/modules/user/user.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
@@ -34,12 +34,6 @@ export class AuthController {
   refresh(@Req() req) {
     const access_token = this.authService.login(req.user);
     return { access_token };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getUserInfo(@Request() req) {
-    return req.user;
   }
 
   @UseGuards(JwtAuthGuard)

@@ -4,25 +4,29 @@ import {
   Get,
   Param,
   Post,
+  Req,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { Public } from 'src/auth/auth.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
-  @Get(':id')
-  async getUserInfo(@Param() id: string) {
-    return this.userService.getById(id);
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getUserInfo(@Req() req) {
+    console.log(req.user);
+    return this.userService.getById(req.user.id);
   }
 
   @Public()
   @Post('signup')
   async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    console.log('여기');
-    console.log(createUserDto);
     return this.userService.signup(createUserDto);
   }
 }
