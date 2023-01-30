@@ -23,7 +23,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
+    if (isPublic) {
+      return true;
+    }
 
+    // public이 아닐 시 토큰 검증
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
     if (authorization === undefined) {
@@ -31,10 +35,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     const token = authorization.replace('Bearer ', '');
     request.user = this.validateToken(token);
-
-    if (isPublic) {
-      return true;
-    }
     return super.canActivate(context);
   }
 
