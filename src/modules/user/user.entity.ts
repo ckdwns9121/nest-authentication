@@ -12,6 +12,7 @@ import {
 import { Recommand } from '../recommand/redommand.entity';
 import { LicenseKey } from './../license-key/license-key.entity';
 import { LicenseByRecommand } from './../license-by-recommand/license-by-recommand.entity';
+import { LicenseByOrder } from './../license-by-order/license-by-order.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -51,13 +52,6 @@ export class User extends BaseEntity {
   operands: Recommand[];
 
   // 유저는 한개의 라이센스 키를 가질 수 있다.
-  @OneToOne(() => LicenseKey, (license) => license.user)
+  @OneToOne(() => LicenseKey, (license) => license.user, { eager: true })
   license_key: LicenseKey;
-
-  // 유저는 여러개의 추천인 이벤트를 등록할 수 있다.
-  @OneToMany(
-    () => LicenseByRecommand,
-    (licenseByRecommand) => licenseByRecommand.id,
-  )
-  licenseByRecommand: LicenseByRecommand[];
 }

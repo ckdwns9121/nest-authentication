@@ -11,6 +11,15 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  async test(id: string): Promise<any> {
+    // console.log('here');
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
+    return user;
+  }
+
   async getById(id: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
     return user;
@@ -65,6 +74,8 @@ export class UserService {
       password: await bcrypt.hash(password, 12),
       ...restProps,
     };
+    console.log('유저 생성 완료');
+
     return await this.userRepository.save(user);
   }
 }

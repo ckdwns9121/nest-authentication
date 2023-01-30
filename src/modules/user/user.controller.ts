@@ -21,12 +21,6 @@ export class UserController {
   @Get('profile')
   async getUserInfo(@Req() req) {
     console.log(req.user);
-    return this.userService.getById(req.user.id);
-  }
-
-  @Public()
-  @Post('signup')
-  async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.userService.signup(createUserDto);
+    return this.userService.test(req.user.id);
   }
 }
