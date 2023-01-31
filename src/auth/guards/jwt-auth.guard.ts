@@ -49,7 +49,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       switch (e.message) {
         // 토큰에 대한 오류를 판단합니다.
         case 'invalid signature':
-        case 'TOKEN_IS_ARRAY':
+        case 'invalid token':
         case 'NO_USER':
           throw new HttpException('유효하지 않은 토큰입니다.', 401);
 

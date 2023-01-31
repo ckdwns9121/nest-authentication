@@ -21,12 +21,12 @@ export class LicenseKey extends BaseEntity {
   @PrimaryColumn()
   license_key: string;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime', name: 'create_at' })
   create_at: Date;
 
   @ManyToOne(() => User, (user) => user.license_key)
   user: User;
 
-  @Column({ nullable: false, default: LicenseType.ACTIVE })
+  @Column({ nullable: false, default: LicenseType.ACTIVE, name: 'type' })
   type: LicenseType;
 }

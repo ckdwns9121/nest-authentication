@@ -3,10 +3,12 @@ import { RecommandService } from './recommand.service';
 import { RecommandController } from './recommand.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recommand } from './redommand.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { UserService } from 'src/modules/user/user.service';
+import { UserModule } from './../user/user.module';
+import { User } from '../user/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Recommand]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Recommand, User]), UserModule],
   providers: [RecommandService],
   controllers: [RecommandController],
 })
