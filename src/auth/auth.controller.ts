@@ -25,22 +25,21 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('signin')
+  @Post('login')
   async login(@Req() req) {
-    console.log(req);
     const access_token = this.authService.login(req.user);
     const refresh_token = this.authService.refreshToken(req.user);
-
     await this.userService.setCurrentRefreshToken(refresh_token, req.user.id);
     return {
       access_token,
       refresh_token,
     };
   }
+
   @Public()
-  @Post('signup')
-  async createUser(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.userService.signup(createUserDto);
+  @Post('register')
+  async registerAccount(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    return this.userService.registerUser(createUserDto);
   }
 
   @Public()
@@ -51,7 +50,6 @@ export class AuthController {
     return { access_token };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('test')
   test(@Req() req) {
     console.log('test');

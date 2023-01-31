@@ -1,23 +1,26 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { Public } from 'src/auth/auth.decorator';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  ValidationPipe,
+} from '@nestjs/common';
+import { CreateRecommandDto } from './dto/create-recommand.dto';
 import { RecommandService } from './recommand.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('recommand')
 export class RecommandController {
   constructor(private recommandService: RecommandService) {}
 
-  // 나를 추천인으로 등록한 사람
-  @Public()
   @Get()
-  getRecommandUsers() {
+  findAllMy() {
     return 'this will return recommand';
   }
 
-  // 추천인 등록
-  @UseGuards(JwtAuthGuard)
   @Post()
-  createRecommand() {
-    return 'this will return create recommand';
+  async create(@Body(ValidationPipe) createRecommandDto: CreateRecommandDto) {
+    return this.recommandService.create(createRecommandDto);
   }
 }
