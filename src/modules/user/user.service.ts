@@ -11,31 +11,29 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async test(id: string): Promise<any> {
-    // console.log('here');
-    const user = await this.userRepository.findOneBy({ id });
-    // const user = await this.userRepository
-    //   .createQueryBuilder('user')
-    //   .where('user.id = :id', { id })
-    //   .getOne();
+  async findOneByUserId(user_id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ user_id });
     return user;
   }
 
-  async getById(id: string): Promise<User> {
+  async findOneById(id: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
     return user;
   }
 
-  async setCurrentRefreshToken(refreshToken: string, id: string) {
+  async setCurrentRefreshToken(
+    refreshToken: string,
+    id: string,
+  ): Promise<User> {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    const user = await this.getById(id);
+    const user = await this.findOneById(id);
     user.currentHashedRefreshToken = currentHashedRefreshToken;
-    await this.userRepository.save(user);
+    return await this.userRepository.save(user);
     // await this.userRepository.update(id, { currentHashedRefreshToken });
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, id: string) {
-    const user = await this.getById(id);
+    const user = await this.findOneById(id);
 
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
@@ -47,16 +45,13 @@ export class UserService {
     }
   }
 
-  async removeRefreshToken(id: string) {
-    const user = await this.getById(id);
+  async removeRefreshToken(id: string): Promise<User> {
+    const user = await this.findOneById(id);
     user.currentHashedRefreshToken = null;
     return await this.userRepository.save(user);
-    // return this.userRepository.update(id, {
-    //   currentHashedRefreshToken: null,
-    // });
   }
 
-  async signup(createUserDto: CreateUserDto): Promise<User> {
+  async registerUser(createUserDto: CreateUserDto): Promise<User> {
     const { id } = createUserDto;
     const conflictId = await this.userRepository.findOneBy({ id });
     if (conflictId) {
