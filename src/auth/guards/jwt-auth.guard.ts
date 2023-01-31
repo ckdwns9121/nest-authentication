@@ -48,12 +48,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       console.log(e);
       switch (e.message) {
         // 토큰에 대한 오류를 판단합니다.
-        case 'INVALID_TOKEN':
+        case 'invalid signature':
         case 'TOKEN_IS_ARRAY':
         case 'NO_USER':
           throw new HttpException('유효하지 않은 토큰입니다.', 401);
 
-        case 'EXPIRED_TOKEN':
+        case 'jwt expired':
           throw new HttpException('토큰이 만료되었습니다.', 410);
 
         default:
