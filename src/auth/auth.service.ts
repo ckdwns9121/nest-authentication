@@ -31,8 +31,9 @@ export class AuthService {
     }
   }
 
-  login(jwtPayload: any) {
+  login(jwtPayload: User) {
     const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
+    console.log(payload);
     const access_token = this.jwtService.sign(payload, {
       secret: jwtConstants.secret,
       expiresIn: '1h',
