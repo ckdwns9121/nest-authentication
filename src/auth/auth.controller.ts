@@ -55,6 +55,6 @@ export class AuthController {
   @Post('test')
   test(@Req() req) {
     console.log('test');
-    console.log(req);
+    return '유효한 토큰';
   }
 }
