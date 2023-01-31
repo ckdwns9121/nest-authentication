@@ -13,7 +13,7 @@ import { User } from '../user/user.entity';
 @Entity()
 export class Recommand extends BaseEntity {
   @PrimaryGeneratedColumn()
-  recommand_id: number;
+  id: number;
 
   // 한사람 당 한 번의 추천 기회가 주어진다.
   @OneToOne(() => User, (user) => user.operator)

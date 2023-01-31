@@ -1,6 +1,7 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Public } from 'src/auth/auth.decorator';
 import { RecommandService } from './recommand.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('recommand')
 export class RecommandController {
@@ -14,7 +15,7 @@ export class RecommandController {
   }
 
   // 추천인 등록
-  @Public()
+  @UseGuards(JwtAuthGuard)
   @Post()
   createRecommand() {
     return 'this will return create recommand';

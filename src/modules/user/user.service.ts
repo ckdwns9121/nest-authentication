@@ -13,10 +13,11 @@ export class UserService {
 
   async test(id: string): Promise<any> {
     // console.log('here');
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id = :id', { id })
-      .getOne();
+    const user = await this.userRepository.findOneBy({ id });
+    // const user = await this.userRepository
+    //   .createQueryBuilder('user')
+    //   .where('user.id = :id', { id })
+    //   .getOne();
     return user;
   }
 

@@ -7,12 +7,9 @@ import {
   BaseEntity,
   OneToOne,
   OneToMany,
-  JoinColumn,
 } from 'typeorm';
 import { Recommand } from '../recommand/redommand.entity';
 import { LicenseKey } from './../license-key/license-key.entity';
-import { LicenseByRecommand } from './../license-by-recommand/license-by-recommand.entity';
-import { LicenseByOrder } from './../license-by-order/license-by-order.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -52,6 +49,6 @@ export class User extends BaseEntity {
   operands: Recommand[];
 
   // 유저는 한개의 라이센스 키를 가질 수 있다.
-  @OneToOne(() => LicenseKey, (license) => license.user, { eager: true })
+  @OneToMany(() => LicenseKey, (license) => license.user, { eager: true })
   license_key: LicenseKey;
 }
