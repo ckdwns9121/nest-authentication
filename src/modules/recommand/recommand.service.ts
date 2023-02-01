@@ -24,27 +24,34 @@ export class RecommandService {
     const { operands } = user;
     const recommandIds = operands.map((item) => item.recommand_id);
 
-    const recommanders = await this.userRepository.find({
-      where: {
-        operator: {
-          recommand_id: In([recommandIds]),
+    // 피 추천인이 존재할 시
+    if (recommandIds.length !== 0) {
+      const recommanders = await this.userRepository.find({
+        where: {
+          operator: {
+            recommand_id: In([recommandIds]),
+          },
         },
-      },
-    });
-    return recommanders.map((item) => {
-      return {
-        id: item.id,
-        create_at: item.created_at,
-      };
-    });
+      });
+      return recommanders.map((item) => {
+        return {
+          id: item.id,
+          create_at: item.created_at,
+        };
+      });
+    }
+    return [];
   }
 
-  async create(createRecommandDto: CreateRecommandDto): Promise<any> {
-    const { operator, operands } = createRecommandDto;
+  async create(
+    createRecommandDto: CreateRecommandDto,
+    user_id: string,
+  ): Promise<any> {
+    const { operands } = createRecommandDto;
 
     const existOperandUser: User = await this.userService.findOneById(operands);
     if (!existOperandUser) {
-      throw new NotFoundException('존재하지 않는 추천인 아이디입니다.');
+      throw new NotFoundException('Is not exist operand user');
     }
 
     // 나중에 쿼리빌더 필요할 때 참고
@@ -54,15 +61,15 @@ export class RecommandService {
     //   .where('u.id = :id', { id: operator })
     //   .getOne();
 
+    const operatorUser: User = await this.userService.findOneByUserId(user_id);
+
     const existRecommand = await this.recommandRepository.findOne({
-      where: { operator: { id: operator } },
+      where: { operator: { id: operatorUser.id } },
     });
 
     if (existRecommand) {
-      throw new BadRequestException('이미 등록한 추천인이 있습니다.');
+      throw new BadRequestException('Is aleady operand');
     }
-
-    const operatorUser: User = await this.userService.findOneById(operator);
 
     const data = await this.recommandRepository.create({
       operator: operatorUser,

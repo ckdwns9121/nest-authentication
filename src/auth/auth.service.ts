@@ -36,7 +36,7 @@ export class AuthService {
     console.log(payload);
     const access_token = this.jwtService.sign(payload, {
       secret: jwtConstants.secret,
-      expiresIn: '15s',
+      expiresIn: '1h',
     });
     return access_token;
   }
@@ -45,7 +45,7 @@ export class AuthService {
     const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
     const refresh_token = this.jwtService.sign(payload, {
       secret: jwtConstants.refresh_secret,
-      expiresIn: '1h',
+      expiresIn: '30d',
     });
     return refresh_token;
   }

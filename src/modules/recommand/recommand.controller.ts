@@ -24,14 +24,11 @@ export class RecommandController {
     @Body(ValidationPipe) createRecommandDto: CreateRecommandDto,
     @Req() req,
   ) {
-    if (req.user.id !== createRecommandDto.operator) {
-      throw new BadRequestException('잘못된 요청입니다.');
-    }
     if (req.user.id === createRecommandDto.operands) {
       throw new BadRequestException(
         '자기 자신을 추천인으로 등록할 수 없습니다..',
       );
     }
-    return this.recommandService.create(createRecommandDto);
+    return this.recommandService.create(createRecommandDto, req.user.user_id);
   }
 }
