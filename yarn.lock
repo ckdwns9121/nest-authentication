@@ -657,6 +657,11 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
+"@mcnaveen/license-gen@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@mcnaveen/license-gen/-/license-gen-1.0.4.tgz#1c1ab83caf15915f9a473aaa249baa63b63a2974"
+  integrity sha512-sSQsCQT1zMW+BxnVU5XK2OCg/G6FtmE3CNR8WsHG7+pVjZtuK2Zca3XAFZ76y1Bv1sy6ef7KqTVsGGWuz9bAwA==
+
 "@nestjs/cli@^9.0.0":
   version "9.1.9"
   resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-9.1.9.tgz#f696b79e1e6478e9fff3bc90c70253720d19f03f"

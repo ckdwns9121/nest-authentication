@@ -5,6 +5,7 @@ import { Recommand } from './redommand.entity';
 import { CreateRecommandDto } from './dto/create-recommand.dto';
 import { UserService } from 'src/modules/user/user.service';
 import { User } from '../user/user.entity';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class RecommandService {
@@ -23,10 +24,6 @@ export class RecommandService {
     const { operands } = user;
     const recommandIds = operands.map((item) => item.recommand_id);
 
-    // const recommanders = await this.recommandRepository.find({
-    //   where: { recommand_id: In(recommandIds) },
-    // });
-
     const recommanders = await this.userRepository.find({
       where: {
         operator: {
@@ -42,7 +39,7 @@ export class RecommandService {
     });
   }
 
-  async create(createRecommandDto: CreateRecommandDto): Promise<string> {
+  async create(createRecommandDto: CreateRecommandDto): Promise<any> {
     const { operator, operands } = createRecommandDto;
 
     const existOperandUser: User = await this.userService.findOneById(operands);
@@ -50,6 +47,7 @@ export class RecommandService {
       throw new NotFoundException('존재하지 않는 추천인 아이디입니다.');
     }
 
+    // 나중에 쿼리빌더 필요할 때 참고
     // const existRecommand = await this.recommandRepository
     //   .createQueryBuilder('r')
     //   .innerJoinAndSelect('r.operator', 'u')
@@ -61,7 +59,7 @@ export class RecommandService {
     });
 
     if (existRecommand) {
-      throw new NotFoundException('이미 등록한 추천인이 있습니다.');
+      throw new BadRequestException('이미 등록한 추천인이 있습니다.');
     }
 
     const operatorUser: User = await this.userService.findOneById(operator);
@@ -71,8 +69,9 @@ export class RecommandService {
       operands: existOperandUser,
     });
 
-    await this.recommandRepository.save(data);
-
-    return `${operator}가 ${operands}를 추천인으로 등록했습니다.`;
+    const res = await this.recommandRepository.save(data);
+    delete res.operator;
+    delete res.operands;
+    return { ...res, message: `you recommanded ${operands} ` };
   }
 }

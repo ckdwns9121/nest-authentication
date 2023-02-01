@@ -3,7 +3,6 @@ import { RecommandService } from './recommand.service';
 import { RecommandController } from './recommand.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recommand } from './redommand.entity';
-import { UserService } from 'src/modules/user/user.service';
 import { UserModule } from './../user/user.module';
 import { User } from '../user/user.entity';
 

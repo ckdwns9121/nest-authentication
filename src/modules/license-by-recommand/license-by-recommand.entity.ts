@@ -11,6 +11,7 @@ import { LicenseKey } from './../license-key/license-key.entity';
 
 export enum EventType {
   RECOMMAND = 'RECOMMAND',
+  GRIDPRO = 'GRIDPRO',
 }
 
 @Entity()
@@ -23,9 +24,9 @@ export class LicenseByRecommand extends BaseEntity {
   user: User;
 
   // 한 이벤트당 하나의 키만 생성 가능하다.
-  @OneToOne(() => LicenseKey, (license) => license.license_key)
+  @OneToOne(() => LicenseKey, (license) => license.key)
   licenseKey: string;
 
-  @Column({ default: EventType.RECOMMAND })
+  @Column({ type: 'enum', enum: EventType, default: EventType.RECOMMAND })
   type: EventType;
 }

@@ -15,7 +15,7 @@ export class LicenseByOrder extends BaseEntity {
   id: number;
 
   // 한 주문당 하나의 라이센스 키만 생성 가능하다.
-  @OneToOne(() => LicenseKey, (license) => license.license_key, { eager: true })
+  @OneToOne(() => LicenseKey, (license) => license.key, { eager: true })
   licenseKey: string;
 
   // 유저는 여러개의 주문을 진행할 수 있다.

@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Req } from '@nestjs/common';
 import { LicenseKeyService } from './license-key.service';
 
 @Controller('license-key')
@@ -10,7 +10,7 @@ export class LicenseKeyController {
     return 'this will be return licenseKey';
   }
   @Post()
-  createLicenseKey() {
-    return 'this will be create licenseKey';
+  createLicenseKey(@Req() req) {
+    return this.licenseKeyService.create(req.user.user_id);
   }
 }

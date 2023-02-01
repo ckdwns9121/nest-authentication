@@ -3,14 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { LicenseByRecommand } from './../license-by-recommand/license-by-recommand.entity';
 
 export enum LicenseType {
   ACTIVE = 'ACTIVE',
@@ -19,7 +15,7 @@ export enum LicenseType {
 @Entity()
 export class LicenseKey extends BaseEntity {
   @PrimaryColumn()
-  license_key: string;
+  key: string;
 
   @CreateDateColumn({ type: 'datetime', name: 'create_at' })
   create_at: Date;
@@ -27,6 +23,12 @@ export class LicenseKey extends BaseEntity {
   @ManyToOne(() => User, (user) => user.license_key)
   user: User;
 
-  @Column({ nullable: false, default: LicenseType.ACTIVE, name: 'type' })
+  @Column({
+    type: 'enum',
+    enum: LicenseType,
+    nullable: false,
+    default: LicenseType.ACTIVE,
+    name: 'type',
+  })
   type: LicenseType;
 }
