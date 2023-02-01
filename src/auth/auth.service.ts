@@ -18,19 +18,25 @@ export class AuthService {
       where: { id },
     });
     if (!user) {
-      throw new UnauthorizedException('가입된 회원이 아닙니다.');
+      throw new UnauthorizedException('User does not exist.');
     }
 
     const passwordCompare = await bcrypt.compare(password, user.password);
+
+    // 비밀번호가 일치한다면
     if (passwordCompare) {
-      // 비밀번호를 뺀 유저정보를 담은 객체를 리턴
+      // 비밀번호를 뺀 유저정보를 리턴
       const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } else {
-      throw new UnauthorizedException('아이디 혹은 비밀번호를 확인해주세요');
+      throw new UnauthorizedException('Please check your ID or password.');
     }
   }
 
+  /**
+   * 로그인 함수.
+   * @return access_token
+   */
   login(jwtPayload: User) {
     const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
     console.log(payload);
@@ -41,6 +47,10 @@ export class AuthService {
     return access_token;
   }
 
+  /**
+   * 리프레쉬 함수.
+   * @return refresh_token
+   */
   refreshToken(jwtPayload: any) {
     const payload = { id: jwtPayload.id, sub: jwtPayload.user_id };
     const refresh_token = this.jwtService.sign(payload, {

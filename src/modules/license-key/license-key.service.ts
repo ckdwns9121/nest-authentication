@@ -31,24 +31,24 @@ export class LicenseKeyService {
 
     const key = generateLicenseKey(32, 4);
 
-    const data = await this.licenseKeyRepository.create({
+    const licenseKey = this.licenseKeyRepository.create({
       user,
       key,
       type: LicenseType.ACTIVE,
     });
 
-    return await this.licenseKeyRepository.save(data);
+    return await this.licenseKeyRepository.save(licenseKey);
   }
 
   async createEventLicense(user: User): Promise<LicenseKey> {
     const key = generateLicenseKey(32, 4);
 
-    const data = await this.licenseKeyRepository.create({
+    const licenseKey = this.licenseKeyRepository.create({
       user,
       key,
       type: LicenseType.ACTIVE,
     });
 
-    return await this.licenseKeyRepository.save(data);
+    return await this.licenseKeyRepository.save(licenseKey);
   }
 }
