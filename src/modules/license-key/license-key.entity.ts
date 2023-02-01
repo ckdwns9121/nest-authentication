@@ -8,9 +8,12 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
-export enum LicenseType {
-  ACTIVE = 'ACTIVE',
-  CANCEL = 'CANCEL',
+export enum LicenseStatus {
+  ACTIVE = 'ACTIVE', // 활성
+  PAUSE = 'PAUSE', //일시정지
+  PENDING = 'PENDING', //일시정지 대기
+  EXPIRED = 'EXPIRED', //만료
+  CANCEL = 'CANCEL', // 취소
 }
 @Entity()
 export class LicenseKey extends BaseEntity {
@@ -25,10 +28,10 @@ export class LicenseKey extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: LicenseType,
+    enum: LicenseStatus,
     nullable: false,
-    default: LicenseType.ACTIVE,
+    default: LicenseStatus.ACTIVE,
     name: 'type',
   })
-  type: LicenseType;
+  status: LicenseStatus;
 }

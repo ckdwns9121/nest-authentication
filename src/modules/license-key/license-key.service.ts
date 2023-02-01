@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { LicenseKey } from './license-key.entity';
 import { UserService } from './../user/user.service';
-import { LicenseType } from './license-key.entity';
+import { LicenseStatus } from './license-key.entity';
 
 export function generateLicenseKey(length, pairs) {
   let result = '';
@@ -34,7 +34,7 @@ export class LicenseKeyService {
     const licenseKey = this.licenseKeyRepository.create({
       user,
       key,
-      type: LicenseType.ACTIVE,
+      status: LicenseStatus.ACTIVE,
     });
 
     return await this.licenseKeyRepository.save(licenseKey);
@@ -46,7 +46,7 @@ export class LicenseKeyService {
     const licenseKey = this.licenseKeyRepository.create({
       user,
       key,
-      type: LicenseType.ACTIVE,
+      status: LicenseStatus.ACTIVE,
     });
 
     return await this.licenseKeyRepository.save(licenseKey);
