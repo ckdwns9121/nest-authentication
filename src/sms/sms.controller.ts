@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { Public } from 'src/auth/auth.decorator';
 import { SmsService } from './sms.service';
 
@@ -9,7 +9,7 @@ export class SmsController {
   @Public()
   @Get()
   test2() {
-    return 'this return sms';
+    return 'this return sms api';
   }
 
   @Public()

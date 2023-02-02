@@ -1,26 +1,26 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
   Req,
-  Request,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './auth.decorator';
 import { UserService } from 'src/modules/user/user.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
+import { SmsService } from 'src/sms/sms.service';
+import { SmsDto } from 'src/sms/dto/sms.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private smsService: SmsService,
   ) {}
 
   @Public()
@@ -54,5 +54,11 @@ export class AuthController {
   test(@Req() req) {
     console.log('test');
     return '유효한 토큰';
+  }
+
+  @Public()
+  @Post('certification')
+  async CertificationNumber(@Body(ValidationPipe) smsDto: SmsDto) {
+    return this.smsService.sendSMS(smsDto.phone_number);
   }
 }

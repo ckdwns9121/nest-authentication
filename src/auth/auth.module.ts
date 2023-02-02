@@ -9,9 +9,15 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './stratgies/jwt.strategy';
 import { JwtRefreshStrategy } from './stratgies/jwt-refresh.strategy';
+import { SmsModule } from './../sms/sms.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), PassportModule, JwtModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    PassportModule,
+    JwtModule,
+    SmsModule,
+  ],
   providers: [
     AuthService,
     UserService,

@@ -8,5 +8,6 @@ import ncpSmsConfig from 'src/configs/ncp-sms.config';
   imports: [ConfigModule.forFeature(ncpSmsConfig)],
   providers: [SmsService],
   controllers: [SmsController],
+  exports: [SmsService],
 })
 export class SmsModule {}

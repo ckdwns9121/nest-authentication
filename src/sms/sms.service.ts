@@ -36,12 +36,13 @@ export class SmsService {
   }
 
   async sendSMS(phoneNumber: string): Promise<any> {
+    const randomNumber = this.generateRandomNumber();
     const formData = {
       type: 'SMS',
       contentType: 'COMM',
       countryCode: '82',
       from: '01073559121', // 발신자 번호
-      content: `EMotion 인증 테스트.`,
+      content: `[EMotion] 인증번호[${randomNumber}]를 입력해주세요.`,
       messages: [
         {
           to: phoneNumber, // 수신자 번호
@@ -62,5 +63,13 @@ export class SmsService {
       .post(this.REQUEST_URL, formData, options)
       .then((res) => res.data)
       .catch((e) => e.response.data);
+  }
+
+  // 6자리 인증번호 생성
+  generateRandomNumber(): string {
+    const randomNumber = Math.floor(Math.random() * 1000000)
+      .toString()
+      .padStart(6, '0');
+    return randomNumber;
   }
 }
