@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import axios from 'axios';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
@@ -14,9 +14,6 @@ export class SmsService {
   private POST_URL = `/sms/v2/services/${this.SERVICE_ID}/messages`;
 
   private makeSignature(timestamp: string): string {
-    console.log(this.SERVICE_ID);
-    console.log(this.ACCESS_KEY);
-    console.log(this.SECRET_KEY);
     const message = [];
     const hmac = crypto.createHmac('sha256', this.SECRET_KEY);
     const space = ' ';
