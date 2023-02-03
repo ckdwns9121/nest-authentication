@@ -13,7 +13,7 @@ import { UserService } from 'src/modules/user/user.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { SmsService } from 'src/sms/sms.service';
-import { SmsDto } from 'src/sms/dto/sms.dto';
+import { CertificationDto, SmsDto } from 'src/sms/dto/sms.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -57,8 +57,17 @@ export class AuthController {
   }
 
   @Public()
-  @Post('certification')
-  async CertificationNumber(@Body(ValidationPipe) smsDto: SmsDto) {
+  @Post('sms')
+  async certificationNumber(@Body(ValidationPipe) smsDto: SmsDto) {
     return this.smsService.sendSMS(smsDto.phone_number);
+  }
+
+  @Public()
+  @Post('certification')
+  async checkCertificationNumber(
+    @Body(ValidationPipe) certificationDto: CertificationDto,
+  ) {
+    const { phone_number, certification } = certificationDto;
+    return this.smsService.checkAuthNumber(phone_number, certification);
   }
 }

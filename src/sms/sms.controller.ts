@@ -8,12 +8,6 @@ export class SmsController {
 
   @Public()
   @Get()
-  test2() {
-    return 'this return sms api';
-  }
-
-  @Public()
-  @Get('test')
   test() {
     return this.smsService.sendSMS('01072055570');
   }

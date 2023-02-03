@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, BadRequestException } from '@nestjs/common';
 import axios from 'axios';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
@@ -19,6 +19,12 @@ export class SmsService {
   private REQUEST_URL = `https://sens.apigw.ntruss.com/sms/v2/services/${this.SERVICE_ID}/messages`;
   private POST_URL = `/sms/v2/services/${this.SERVICE_ID}/messages`;
 
+  /**
+   * NCP Sign.
+   * 네이버 클라우드 플랫폼 서비스를 사용하기 위해 헤더 사이닝
+   * @param timestamp
+   * @returns
+   */
   private makeSignature(timestamp: string): string {
     const message = [];
     const hmac = crypto.createHmac('sha256', this.SECRET_KEY);
@@ -38,16 +44,22 @@ export class SmsService {
     return signature.toString(); // toString()이 없었어서 에러가 자꾸 났었는데, 반드시 고쳐야함.
   }
 
+  /**
+   * 인증번호 전송
+   * @param phoneNumber :유저 핸드폰 번호
+   * @returns 성공상태
+   */
   async sendSMS(phoneNumber: string): Promise<any> {
-    const test = await this.client.get('01073559121');
-    console.log(test);
     const randomNumber = this.generateRandomNumber();
+    // 인증번호 레디스에 저장
+    await this.client.set(phoneNumber, randomNumber, 'EX', 180);
+
     const formData = {
       type: 'SMS',
       contentType: 'COMM',
       countryCode: '82',
       from: '01073559121', // 발신자 번호
-      content: `[EMotion] 인증번호[${test}]를 입력해주세요.`,
+      content: `[EMotion] 인증번호[${randomNumber}]를 입력해주세요.`,
       messages: [
         {
           to: phoneNumber, // 수신자 번호
@@ -70,11 +82,31 @@ export class SmsService {
       .catch((e) => e.response.data);
   }
 
-  // 6자리 인증번호 생성
+  /**
+   * 6자리 인증번호 생성
+   * @returns randomNumber
+   */
   generateRandomNumber(): string {
     const randomNumber = Math.floor(Math.random() * 1000000)
       .toString()
       .padStart(6, '0');
     return randomNumber;
+  }
+
+  /**
+   * 인증번호 확인
+   */
+  async checkAuthNumber(phoneNumber, authNumber: string) {
+    const compareAuthNumber = await this.client.get(phoneNumber);
+    console.log(compareAuthNumber);
+    if (compareAuthNumber === authNumber) {
+      await this.client.del(phoneNumber);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Authentication completed.',
+      };
+    } else {
+      throw new BadRequestException('Authentication failed.');
+    }
   }
 }
