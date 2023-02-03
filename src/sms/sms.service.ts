@@ -1,11 +1,17 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class SmsService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    @InjectRedis()
+    private readonly client: Redis,
+    private configService: ConfigService,
+  ) {}
 
   private SERVICE_ID = this.configService.get<string>('ncp.service_id');
   private ACCESS_KEY = this.configService.get<string>('ncp.access_key');
@@ -33,13 +39,15 @@ export class SmsService {
   }
 
   async sendSMS(phoneNumber: string): Promise<any> {
+    const test = await this.client.get('01073559121');
+    console.log(test);
     const randomNumber = this.generateRandomNumber();
     const formData = {
       type: 'SMS',
       contentType: 'COMM',
       countryCode: '82',
       from: '01073559121', // 발신자 번호
-      content: `[EMotion] 인증번호[${randomNumber}]를 입력해주세요.`,
+      content: `[EMotion] 인증번호[${test}]를 입력해주세요.`,
       messages: [
         {
           to: phoneNumber, // 수신자 번호

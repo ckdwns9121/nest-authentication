@@ -7,6 +7,7 @@ import { UserModule } from './modules/user/user.module';
 import { RecommandModule } from './modules/recommand/recommand.module';
 import { LicenseKeyModule } from './modules/license-key/license-key.module';
 import { SmsModule } from './sms/sms.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 import { LicenseByRecommandModule } from './modules/license-by-recommand/license-by-recommand.module';
 
@@ -37,6 +38,13 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         entities: [__dirname + '../**/*.entity.{js,ts}'],
         synchronize: true,
       }),
+    }),
+    RedisModule.forRoot({
+      readyLog: true,
+      config: {
+        host: 'localhost',
+        port: 6379,
+      },
     }),
     AuthModule,
     UserModule,
